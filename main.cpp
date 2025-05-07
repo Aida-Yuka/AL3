@@ -19,12 +19,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	//ゲームシーンの初期化
 	gameScene->Initialize();
 
-	// メインループ
-	while (true)
+	//DirectXCommonインスタンスの取得
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+
+	//InguiManagerインスタンスの取得3
+	ImGuiManager* imguiManager = ImGuiManager::GetInstance();
+
+	//メインループ
+	while (true) 
 	{
 		//エンジンの更新
-		if (KamataEngine::Update())
-		{
+		if (KamataEngine::Update()) {
 			break;
 		}
 
