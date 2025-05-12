@@ -29,5 +29,5 @@ void Player::Draw() {
 	/// 描画処理///
 
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *camera_, textureHandle_);
+	model_->Draw(worldTransform_, *camera_);
 }

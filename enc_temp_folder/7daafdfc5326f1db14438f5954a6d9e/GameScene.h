@@ -14,6 +14,7 @@ public:
 	KamataEngine::Model* modelBlock_ = nullptr;
 	KamataEngine::Model* modelSkydome_ = nullptr;
 
+
 	//デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
 

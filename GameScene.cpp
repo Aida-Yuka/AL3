@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "MyMath.h"
+#include "Skydome.h"
 
 using namespace KamataEngine;
 
@@ -10,8 +11,9 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 
 	// 3Dモデルの生成
-	model_ = Model::Create();
-	modelBlock_ = Model::CreateFromOBJ("cube");
+	model_ = Model::CreateFromOBJ("player");
+	modelBlock_ = Model::CreateFromOBJ("block");
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -20,7 +22,7 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, textureHandle_, &camera_);
 
 	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1600, 700);
+	debugCamera_ = new DebugCamera(1600, 800);
 
 	//＝＝＝ブロック配置の初期化＝＝＝//
 	//要素数
@@ -38,7 +40,6 @@ void GameScene::Initialize() {
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 	}
 
-	
 	// キューブの生成
 	for (uint32_t i = 0; i < kNumBlockVirtical; ++i)
 	{
@@ -121,7 +122,7 @@ void GameScene::Draw()
 	/// モデルインスタンスの描画処理///
 
 	// 自キャラの描画
-	//player_->Draw();
+	player_->Draw();
 
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -133,6 +134,9 @@ void GameScene::Draw()
 			modelBlock_->Draw(*worldTransformBlock, camera_);
 		}
 	}
+
+	//天球の描画
+	modelSkydome_->Draw(worldTransform_,camera_);
 
 	/// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝///
 
@@ -146,6 +150,7 @@ GameScene::~GameScene() {
 	delete player_;
 	delete modelBlock_;
 	delete debugCamera_;
+	delete modelSkydome_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_)
 	{
