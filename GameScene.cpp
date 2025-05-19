@@ -4,6 +4,42 @@
 
 using namespace KamataEngine;
 
+
+void GameScene::GenerateBlocks() {
+	// ＝＝＝ブロック配置の初期化＝＝＝//
+	// 要素数
+	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();     // 縦
+	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal(); // 横
+
+	/// 要素数を変更する
+	// 列数を設定(縦方向のブロック数)
+	worldTransformBlocks_.resize(kNumBlockVirtical);
+
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+		// 1列の要素数を設定(横方向のブロック数)
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+	}
+
+	// キューブの生成
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
+			/*/模様の処理
+			if ((i + j) % 2 == 0)
+			{
+			    continue;
+			}*/
+
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
+}
+
+
 void GameScene::Initialize()
 {
 	///インゲームの初期化処理///
@@ -27,6 +63,8 @@ void GameScene::Initialize()
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+
+	GenerateBlocks();
 }
 
 void GameScene::Update()
@@ -42,11 +80,9 @@ void GameScene::Update()
 	// 自キャラの更新
 	player_->Update();
 
-	//ブロックの更新
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_)
-	{
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine)
-		{
+	// ブロックの更新
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
 
@@ -57,28 +93,24 @@ void GameScene::Update()
 		}
 	}
 
-	#ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_0))
-	{
+#ifdef _DEBUG
+	if (Input::GetInstance()->TriggerKey(DIK_0)) {
 		isDebugCameraActive_ = !isDebugCameraActive_;
 	}
-	#endif
+#endif
 
-	//カメラの処理
-	if (isDebugCameraActive_)
-	{
+	// カメラの処理
+	if (isDebugCameraActive_) {
 		debugCamera_->Update();
 
 		camera_.matView = debugCamera_->GetCamera().matView;
 		camera_.matProjection = debugCamera_->GetCamera().matProjection;
 
-		//ビュープロジェクション行列の転送
+		// ビュープロジェクション行列の転送
 		camera_.TransferMatrix();
 
-	}
-	else
-	{
-		//ビュープロジェクション行列の更新と転送
+	} else {
+		// ビュープロジェクション行列の更新と転送
 		camera_.UpdateMatrix();
 	}
 }

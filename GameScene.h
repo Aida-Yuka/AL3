@@ -37,7 +37,7 @@ public:
 	MapChipField* mapChipField_=nullptr;
 
 	//表示ブロックの生成
-	//void GenerateBlocks();
+	void GenerateBlocks();
 
 private:
 	// ワールドトランスフォーム
