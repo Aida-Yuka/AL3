@@ -1,6 +1,7 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Player.h"
+#include "MapChipField.h"
 #include <vector>
 
 class GameScene
@@ -31,6 +32,12 @@ public:
 
 	// デストラクタ
 	~GameScene();
+
+	//マップチップフィールド
+	MapChipField* mapChipField_=nullptr;
+
+	//表示ブロックの生成
+	//void GenerateBlocks();
 
 private:
 	// ワールドトランスフォーム
