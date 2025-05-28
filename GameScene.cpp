@@ -39,7 +39,6 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
-
 void GameScene::Initialize()
 {
 	///インゲームの初期化処理///
@@ -55,9 +54,6 @@ void GameScene::Initialize()
 	// 自キャラの生成
 	player_ = new Player();
 
-	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_, &camera_);
-
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1600, 800);
 
@@ -65,6 +61,12 @@ void GameScene::Initialize()
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
+
+	// 座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+
+	// 自キャラの初期化
+	player_->Initialize(model_, &camera_, playerPosition);
 }
 
 void GameScene::Update()
@@ -94,7 +96,8 @@ void GameScene::Update()
 	}
 
 #ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_0)) {
+	if (Input::GetInstance()->TriggerKey(DIK_0))
+	{
 		isDebugCameraActive_ = !isDebugCameraActive_;
 	}
 #endif
