@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "MyMath.h"
 #include "Skydome.h"
+#include "CameraController.h"
 
 using namespace KamataEngine;
 
@@ -54,7 +55,10 @@ void GameScene::Initialize()
 	// 自キャラの生成
 	player_ = new Player();
 
-	//デバッグカメラの生成
+	//追従カメラの生成
+	camera_ = new CameraController();//☆☆☆
+
+	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1600, 800);
 
 	mapChipField_ = new MapChipField;
@@ -116,6 +120,9 @@ void GameScene::Update()
 		// ビュープロジェクション行列の更新と転送
 		camera_.UpdateMatrix();
 	}
+
+	//追従カメラ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 }
 
 void GameScene::Draw()
