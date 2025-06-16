@@ -9,6 +9,8 @@ void CameraController::Initialize(Camera* camera_) {
 
 	//カメラの初期化
 	camera_ = camera;
+
+
 }
 
 void CameraController::Update() {
