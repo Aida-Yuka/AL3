@@ -2,6 +2,8 @@
 #include "KamataEngine.h"
 #include "Player.h"
 #include "MapChipField.h"
+#include "Skydome.h"
+#include "CameraController.h"
 #include <vector>
 
 class GameScene
@@ -21,6 +23,9 @@ public:
 	// 自キャラ
 	Player* player_ = nullptr;
 
+	//カメラコントローラー
+	CameraController* cameraController_ = nullptr;
+
 	// 初期化
 	void Initialize();
 
@@ -34,7 +39,10 @@ public:
 	~GameScene();
 
 	//マップチップフィールド
-	MapChipField* mapChipField_=nullptr;
+	MapChipField* mapChipField_ = nullptr;
+
+	//
+	Skydome* skydome_ = nullptr;
 
 	//表示ブロックの生成
 	void GenerateBlocks();

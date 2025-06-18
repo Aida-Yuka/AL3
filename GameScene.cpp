@@ -1,9 +1,9 @@
 #include "GameScene.h"
 #include "MyMath.h"
 #include "Skydome.h"
+#include "CameraController.h"
 
 using namespace KamataEngine;
-
 
 void GameScene::GenerateBlocks() {
 	// ＝＝＝ブロック配置の初期化＝＝＝//
@@ -15,7 +15,8 @@ void GameScene::GenerateBlocks() {
 	// 列数を設定(縦方向のブロック数)
 	worldTransformBlocks_.resize(kNumBlockVirtical);
 
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i)
+{
 		// 1列の要素数を設定(横方向のブロック数)
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 	}
@@ -54,8 +55,27 @@ void GameScene::Initialize()
 	// 自キャラの生成
 	player_ = new Player();
 
+	//天球の生成
+	skydome_ = new Skydome();
+
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1600, 800);
+
+	// カメラの初期化
+	camera_.Initialize();
+
+	//天球の初期化
+	skydome_->Initialize(modelSkydome_, &camera_);
+
+	///===カメラコントローラの初期化===
+	//生成
+	cameraController_ = new CameraController();
+	//初期化
+	cameraController_->Intialize();
+	//追従対象をセット
+	cameraController_->SetTarget(player_);
+	//リセット(瞬間合わせ)
+	cameraController_->Reset();
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
@@ -67,6 +87,10 @@ void GameScene::Initialize()
 
 	// 自キャラの初期化
 	player_->Initialize(model_, &camera_, playerPosition);
+
+	// カメラ移動範囲
+	CameraController::Rect cameraArea = {12.0f, 100.0f - 12.0f, 6.0f, 6.0f};
+	cameraController_->SetMovableArea(cameraArea);
 }
 
 void GameScene::Update()
@@ -74,10 +98,10 @@ void GameScene::Update()
 	/// インゲームの更新処理///
 
 	// ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
-
-	// カメラの初期化
-	camera_.Initialize();
+	//worldTransform_.Initialize();
+	
+	// カメラコントローラーの更新
+	cameraController_->Update();
 
 	// 自キャラの更新
 	player_->Update();
@@ -103,7 +127,8 @@ void GameScene::Update()
 #endif
 
 	// カメラの処理
-	if (isDebugCameraActive_) {
+	if (isDebugCameraActive_)
+	{
 		debugCamera_->Update();
 
 		camera_.matView = debugCamera_->GetCamera().matView;
@@ -112,15 +137,22 @@ void GameScene::Update()
 		// ビュープロジェクション行列の転送
 		camera_.TransferMatrix();
 
-	} else {
-		// ビュープロジェクション行列の更新と転送
-		camera_.UpdateMatrix();
+	} else
+	{
+		// ビュープロジェクション行列の更新
+		//camera_.UpdateMatrix();
+		
+		camera_.matView = cameraController_->GetViewProjection().matView;
+		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+
+		//ビュープロジェクション行列の転送
+		camera_.TransferMatrix();
 	}
 }
 
 void GameScene::Draw()
 {
-	/// 描画処理///
+	// 描画処理///
 
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
@@ -128,15 +160,13 @@ void GameScene::Draw()
 	// 3Dモデル描画前処理
 	Model::PreDraw(dxCommon->GetCommandList());
 
-	/// モデルインスタンスの描画処理///
-
+	/// モデルインスタンスの描画処理//
 	// 自キャラの描画
 	player_->Draw();
 
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine)
-		{
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
 
@@ -144,10 +174,10 @@ void GameScene::Draw()
 		}
 	}
 
-	//天球の描画
-	modelSkydome_->Draw(worldTransform_,camera_);
+	// 天球の描画
+	skydome_->Draw();
 
-	/// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝///
+	///＝＝＝＝＝＝＝＝＝＝＝＝＝＝///
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();

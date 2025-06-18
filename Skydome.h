@@ -10,7 +10,7 @@ public:
 	/// <param name="modle">モデル</param>
 	/// <param name="camera">カメラ</param>
 	
-	void Initialize(KamataEngine::Model* model, uint32_t textureHandle, KamataEngine::Camera* camera);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera);
 
 	void Update();
 
