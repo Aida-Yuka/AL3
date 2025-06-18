@@ -8,6 +8,19 @@ enum class LRDirection
 	kLeft,
 };
 
+//角
+enum Corner
+{
+	kRightBottom,//右下
+	kLeftBottom,//左下
+	kRightTop,//右上
+	kLeftTop,//左上
+
+	kNumCorner//要素数
+};
+
+class MapChipField;
+
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -78,4 +91,11 @@ private:
 	static inline const float kLimitFallSpeed = 0.5f;
 	//ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration = 0.8f;
+	
+	//マップチップによるフィールド
+	MapChipField* mapChipField_ = nullptr;
+
+	//キャラクターの当たり判定
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 };

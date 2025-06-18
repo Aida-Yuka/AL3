@@ -4,15 +4,21 @@
 //前方宣言
 class Player;
 
+/// <summary>
+/// カメラコントローラー
+/// </summary>
 class CameraController
 {
 public:
 	void Intialize();
 
+	void Initialize(KamataEngine::Camera* camera);
+
 	void Update();
 
 	void SetTarget(Player* target) { target_ = target; }
 
+	//瞬間合わせ
 	void Reset();
 
 	// 矩形
@@ -31,6 +37,7 @@ public:
 private:
 	KamataEngine::Camera camera_;
 
+	//プレイヤーにポインタ
 	Player* target_ = nullptr;
 
 	//瞬間合わせ
@@ -48,3 +55,4 @@ private:
 	//速度掛け率
 	static inline const float kVelocityBias = 10;
 };
+

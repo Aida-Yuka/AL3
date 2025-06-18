@@ -169,6 +169,52 @@ void Player::Update() {
 
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
+
+	///全体の流れを整理する///
+	//①移動入力
+
+	//②移動量を加味して衝突判定する
+	//衝突情報を初期化
+	CollisionMapInfo collisionMapInfo;
+	//移動量に速度の値をコピー
+	collisionMapInfo.displacement = velocity_;
+	//マップ衝突チェック
+	mapCollisionDetection(collisionMapInfo);
+
+	mapCollisionDetection(info);
+
+	//指定した角の座標計算
+	Vector3 CornerPosition(const Vector3& center, Corner corner)
+	{
+		if (corner == kRightBottom)
+		{
+			return center + {kWidth / 2.0f, kHeight / 2.0f, 0};
+		}
+		else if (corner == kLeftBottom)
+		{
+			return center + {-kWidth / 2.0f, -kHeight / 2.0f, 0};
+		}
+		else if (corner == kRightTop)
+		{
+			return center + {kWidth / 2.0f, kHeight / 2.0f, 0};
+		}
+		else
+		{
+			return center + {-kWidth / 2.0f, +kHeight / 2.0f, 0};
+		}
+	}
+
+	//判定結果を反映して移動させる
+
+	//④天井に接触しているとき
+
+	//⑤壁に接触しているとき
+
+	//⑥接地判定の切り替え
+
+	//⑦旋回制御
+
+	//⑧行列計算
 }
 
 void Player::Draw() {

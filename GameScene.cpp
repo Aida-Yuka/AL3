@@ -52,8 +52,8 @@ void GameScene::Initialize()
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
-	// 自キャラの生成
-	player_ = new Player();
+	//追従カメラの生成
+	camera_ = new CameraController();//☆☆☆
 
 	//天球の生成
 	skydome_ = new Skydome();
@@ -84,6 +84,9 @@ void GameScene::Initialize()
 
 	// 座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+
+	// 自キャラの生成
+	player_ = new Player();
 
 	// 自キャラの初期化
 	player_->Initialize(model_, &camera_, playerPosition);
@@ -148,6 +151,9 @@ void GameScene::Update()
 		//ビュープロジェクション行列の転送
 		camera_.TransferMatrix();
 	}
+
+	//追従カメラ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 }
 
 void GameScene::Draw()
