@@ -6,15 +6,15 @@
 using namespace KamataEngine;
 using namespace MathUtility;
 
-void CameraController::Intialize()
-{
-	//カメラの初期化
+void CameraController::Intialize(/*Camera* camera*/) {
+	/// インゲームの初期化処理///
+
+	// 引数として受け取ったデータをメンバ変数に記録する
+	//camera_ = camera;
+
+	// カメラの初期化
 	camera_.Initialize();
 }
-
-void CameraController::Initialize(Camera* camera_) {
-	/// インゲームの初期化処理///
-static inline const CameraController::Rect targetMargin = {-9.0f, 9.0f, -5.0f, 5.0f};
 
 void CameraController::Update()
 {
@@ -29,24 +29,10 @@ void CameraController::Update()
 	camera_.translation_.y = Lerp(camera_.translation_.y, targetPosition_.y, kInterpolationRate);
 
 	//追従対象が画面外に出ないように修正
-	/*camera_.translation_.x = max(camera_.translation_.x, targetPosition_.x + targetMargin.left);
+	camera_.translation_.x = max(camera_.translation_.x, targetPosition_.x + targetMargin.left);
 	camera_.translation_.x = max(camera_.translation_.x, targetPosition_.x + targetMargin.right);
 	camera_.translation_.y = max(camera_.translation_.y, targetPosition_.y + targetMargin.bottom);
-	camera_.translation_.y = max(camera_.translation_.y, targetPosition_.y + targetMargin.top);*/
-
-	// 3. マージン補正（左右）
-	if (camera_.translation_.x < targetPosition_.x + targetMargin.left) {
-		camera_.translation_.x = targetPosition_.x + targetMargin.left;
-	} else if (camera_.translation_.x > targetPosition_.x + targetMargin.right) {
-		camera_.translation_.x = targetPosition_.x + targetMargin.right;
-	}
-
-	// 4. マージン補正（上下）
-	if (camera_.translation_.y < targetPosition_.y + targetMargin.bottom) {
-		camera_.translation_.y = targetPosition_.y + targetMargin.bottom;
-	} else if (camera_.translation_.y > targetPosition_.y + targetMargin.top) {
-		camera_.translation_.y = targetPosition_.y + targetMargin.top;
-}
+	camera_.translation_.y = max(camera_.translation_.y, targetPosition_.y + targetMargin.top);
 
 	// 移動範囲宣言
 	camera_.translation_.x = max(camera_.translation_.x, movableArea_.left);
@@ -54,11 +40,11 @@ void CameraController::Update()
 	camera_.translation_.y = max(camera_.translation_.y, movableArea_.bottom);
 	camera_.translation_.y = min(camera_.translation_.y, movableArea_.top);
 
-	//追従対象のワールドトランスフォームを参照する
+	/*/追従対象のワールドトランスフォームを参照する
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 	//追従対象とオフセットからカメラの座標を計算
-	camera_.translation_ = targetWorldTransform.translation_ * targetOffset_;
-	//行列を更新する
+	camera_.translation_ = targetWorldTransform.translation_ * targetOffset_;*/
+
 	// 行列を更新する
 	camera_.UpdateMatrix();
 }

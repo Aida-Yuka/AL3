@@ -170,7 +170,7 @@ void Player::Update() {
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 
-	///全体の流れを整理する///
+	/*//全体の流れを整理する///
 	//①移動入力
 
 	//②移動量を加味して衝突判定する
@@ -214,7 +214,7 @@ void Player::Update() {
 
 	//⑦旋回制御
 
-	//⑧行列計算
+	//⑧行列計算*/
 }
 
 void Player::Draw() {

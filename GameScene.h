@@ -1,4 +1,4 @@
-x#pragma once
+#pragma once
 #include "KamataEngine.h"
 #include "Player.h"
 #include "MapChipField.h"

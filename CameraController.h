@@ -10,9 +10,7 @@ class Player;
 class CameraController
 {
 public:
-	void Intialize();
-
-	void Initialize(KamataEngine::Camera* camera);
+	void Intialize(/*Camera* camera*/);
 
 	void Update();
 
@@ -34,6 +32,9 @@ public:
 
 	void SetMovableArea(Rect area) { movableArea_ = area; }
 
+	//追従対象の各方向へのカメラ移動範囲
+	static inline const Rect targetMargin = {-9.0f, 9.0f, -5.0f, 5.0f};
+
 private:
 	KamataEngine::Camera camera_;
 
@@ -50,9 +51,9 @@ private:
 	KamataEngine::Vector3 targetPosition_;
 
 	//座標補間割合
-	static inline const float kInterpolationRate = 0.1f;
+	static inline const float kInterpolationRate = 0.5f;
 
 	//速度掛け率
-	static inline const float kVelocityBias = 10;
+	static inline const float kVelocityBias = 3;
 };
 
