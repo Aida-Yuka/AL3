@@ -82,7 +82,31 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 }
 
 // マップチップ座標の取得
- Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex)		
+KamataEngine::Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex)		
  {
-	return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
+	return KamataEngine::Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
+ }
+
+ MapChipField::IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position)
+ {
+	 IndexSet indexSet = {};
+	 indexSet.xIndex = static_cast<uint32_t>((position.x + kBlockWidth / 2) / kBlockWidth);
+	 indexSet.yIndex = kNumBlockVirtical - 1-static_cast < uint32_t >((position.y + kBlockHeight / 2)/kBlockHeight);
+
+	 return indexSet;
+ }
+
+ //ブロックの範囲取得係数
+ MapChipField::Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex)
+ {
+	 //指定ブロックの中心座標を取得する
+	 Vector3 center = MapChipField::GetMapChipPositionByIndex(xIndex, yIndex);
+
+	 MapChipField::Rect rect{};
+	 rect.left = center.x - kBlockWidth / 2.0f;
+	 rect.right = center.x + kBlockWidth / 2.0f;
+	 rect.bottom = center.y + kBlockHeight / 2.0f;
+	 rect.top = center.y - kBlockHeight / 2.0f;
+
+	 return rect;
  }

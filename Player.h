@@ -44,6 +44,35 @@ public:
 	//速度加算
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 
+	//メンバ変数のポインタ
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+	// マップとの当たり判定情報
+	struct CollisionMapInfo {
+		bool ceiling = false;
+		bool landing = false;
+		bool hitWall = false;
+		KamataEngine::Vector3 move{};
+	};
+
+	//①移動入力
+	void InputMove();
+
+	//②マップ衝突判定
+	void CheckMapCollision(CollisionMapInfo& info);
+	void CheckMapCollisionUp(CollisionMapInfo& info);
+
+	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
+
+	//③判定結果を反映して移動させる
+	void CheckMapMove(const CollisionMapInfo& info);
+
+	//④天井に接触している場合
+	void CheckMapCeiling(const CollisionMapInfo& info);
+
+	//⑦旋回制御
+	void AnimateTurn();
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -91,11 +120,14 @@ private:
 	static inline const float kLimitFallSpeed = 0.5f;
 	//ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration = 0.8f;
-	
-	//マップチップによるフィールド
-	MapChipField* mapChipField_ = nullptr;
 
 	//キャラクターの当たり判定
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+
+	// マップチップによるフィールド
+	MapChipField* mapChipField_ = nullptr;
+
+	//空白
+	static inline const float kBlank = 1;
 };

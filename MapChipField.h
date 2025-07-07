@@ -7,17 +7,30 @@ enum class MapChipType
 	kBlock,//ブロック
 };
 
-struct MapChipDate
-{
-	std::vector<std::vector<MapChipType>> data;
-};
-
 ///<summary>
 ///マップチップフィールド
 ///<summary>
 class MapChipField
 {
 public:
+
+	struct MapChipDate {
+		std::vector<std::vector<MapChipType>> data;
+	};
+
+	struct IndexSet {
+		uint32_t xIndex;
+		uint32_t yIndex;
+	};
+
+	// 範囲矩形
+	struct Rect {
+		float left;   // 左端
+		float right;  // 右端
+		float bottom; // 下端
+		float top;    // 上端
+	};
+
 	//リセット
 	void ResetMapChipData();
 
@@ -33,7 +46,13 @@ public:
 	uint32_t GetNumBlockVirtical() const { return kNumBlockVirtical; }
 	uint32_t GetNumBlockHorizontal() const { return kNumBlockHorizontal; }
 
+	IndexSet GetMapChipIndexSetByPosition(const KamataEngine::Vector3& position);
+
+	//ブロックの範囲取得関数
+	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
+
 private:
+
 	// マップチップデータ構造体
 	MapChipDate mapChipData_;
 

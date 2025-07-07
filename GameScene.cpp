@@ -65,6 +65,9 @@ void GameScene::Initialize()
 	// 自キャラの初期化
 	player_->Initialize(model_, &camera_, playerPosition);
 
+	//マップチップデータのセット
+	player_->SetMapChipField(mapChipField_);
+
 	//追従カメラの生成
 	cameraController_ = new CameraController();
 
