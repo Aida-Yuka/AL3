@@ -49,9 +49,9 @@ public:
 
 	// マップとの当たり判定情報
 	struct CollisionMapInfo {
-		bool ceiling = false;
-		bool landing = false;
-		bool hitWall = false;
+		bool ceiling = false;//天井
+		bool landing = false;//着陸
+		bool hitWall = false;//
 		KamataEngine::Vector3 move{};
 	};
 
@@ -61,6 +61,7 @@ public:
 	//②マップ衝突判定
 	void CheckMapCollision(CollisionMapInfo& info);
 	void CheckMapCollisionUp(CollisionMapInfo& info);
+	void CheckMapCollisionDown(CollisionMapInfo& info);
 
 	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
@@ -69,6 +70,9 @@ public:
 
 	//④天井に接触している場合
 	void CheckMapCeiling(const CollisionMapInfo& info);
+
+	//⑥接地状態の切り替え処理
+	void CheckMapLanding(const CollisionMapInfo& info);
 
 	//⑦旋回制御
 	void AnimateTurn();
@@ -130,4 +134,10 @@ private:
 
 	//空白
 	static inline const float kBlank = 1;
+
+	//着地時の速度減衰率
+	static inline const float kAttenuationLanding = 0.8f;
+
+	//微小な数値
+	static inline const float kGroundSearchHeight = 0.5;
 };
