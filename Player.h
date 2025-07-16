@@ -62,6 +62,8 @@ public:
 	void CheckMapCollision(CollisionMapInfo& info);
 	void CheckMapCollisionUp(CollisionMapInfo& info);
 	void CheckMapCollisionDown(CollisionMapInfo& info);
+	void CheckMapCollisionRight(CollisionMapInfo& info);
+	void CheckMapCollisionLeft(CollisionMapInfo& info);
 
 	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
@@ -101,7 +103,7 @@ private:
 
 	static inline const float kAttenuation = 0.1f;
 
-	static inline const float kLimitRunSpeed = 1.0f;
+	static inline const float kLimitRunSpeed = 0.5f;
 
 	// 向いている向き
 	LRDirection lrDirection_ = LRDirection::kRight;
