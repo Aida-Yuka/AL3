@@ -51,7 +51,7 @@ public:
 	struct CollisionMapInfo {
 		bool ceiling = false;//天井
 		bool landing = false;//着陸
-		bool hitWall = false;//
+		bool hitWall = false;//壁にぶつかった
 		KamataEngine::Vector3 move{};
 	};
 

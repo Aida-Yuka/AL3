@@ -4,6 +4,7 @@
 #include "MapChipField.h"
 #include "Skydome.h"
 #include "CameraController.h"
+#include "Enemy.h"
 #include <vector>
 
 class GameScene
@@ -16,6 +17,7 @@ public:
 	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::Model* modelBlock_ = nullptr;
 	KamataEngine::Model* modelSkydome_ = nullptr;
+	KamataEngine::Model* modelEnemy_ = nullptr;
 
 	//デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
@@ -41,8 +43,11 @@ public:
 	//マップチップフィールド
 	MapChipField* mapChipField_ = nullptr;
 
-	//
+	//天球
 	Skydome* skydome_ = nullptr;
+
+	//敵
+	Enemy* enemy_ = nullptr;
 
 	//表示ブロックの生成
 	void GenerateBlocks();

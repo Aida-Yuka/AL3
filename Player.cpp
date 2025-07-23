@@ -40,7 +40,8 @@ void Player::InputMove()
 				// 旋回タイマーに時間を設定する
 				turnTimer_ = kTimeTurn;
 			}
-		} else if (Input::GetInstance()->PushKey(DIK_LEFT))
+		}
+		else if (Input::GetInstance()->PushKey(DIK_LEFT))
 		{
 			acceleration.x -= kAcceleration;
 
