@@ -1,5 +1,8 @@
 #pragma once
 #include "KamataEngine.h"
+#include "MyMath.h"
+
+class Player;
 
 /// <summary>
 /// 敵
@@ -13,6 +16,15 @@ public:
 
 	void Draw();
 
+	// ワールド座標を取得
+	KamataEngine::Vector3 GetWorldPosition();
+
+	// AABBを取得
+	AABB GetAABB();
+
+	//衝突応答
+	void OnCollision(const Player* player);
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -22,6 +34,11 @@ private:
 
 	// カメラ
 	KamataEngine::Camera* camera_ = nullptr;
+
+	// キャラクターの当たり判定
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
+	static inline const float kDepth = 0.8f;
 
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 90.0f;

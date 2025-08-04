@@ -9,6 +9,37 @@ using namespace MathUtility;
 
 float ToRadian(float degree) { return degree * (3.14159265f / 180.0f); }
 
+Vector3 Enemy::GetWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	// ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+// AABB取得関数
+AABB Enemy::GetAABB()
+{
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kDepth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kDepth / 2.0f};
+
+	return aabb;
+}
+
+//衝突応答
+void Enemy::OnCollision(const Player* player)
+{
+	(void)player;
+}
+
 void Enemy::Initialize(Model* model, Camera* camera, const Vector3& position)
 {
 	/// インゲームの初期化処理///

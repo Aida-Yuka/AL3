@@ -2,7 +2,6 @@
 
 #include "Player.h"
 #include <cassert>
-#include "MyMath.h"
 #include <numbers>
 #include <algorithm>
 #include "MapChipField.h"
@@ -308,7 +307,8 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info) {
 	}
 }
 
-void Player::CheckMapCollision(CollisionMapInfo& info) { 	
+void Player::CheckMapCollision(CollisionMapInfo& info)
+{ 	
 	CheckMapCollisionUp(info);
 	CheckMapCollisionDown(info);
 	CheckMapCollisionRight(info);
@@ -436,6 +436,40 @@ void Player::AnimateTurn()
 	}
 }
 
+Vector3 Player::GetWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	// ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+//AABB取得関数
+AABB Player::GetAABB()
+{
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kDepth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kDepth / 2.0f};
+
+	return aabb;
+}
+
+//衝突応答
+void Player::OnCollision(const Enemy* enemy)
+{
+	(void)enemy;
+	//ジャンプ開始(仮処理)
+	//velocity_ += Vector3(5.0f);
+	velocity_.y = 1.0f;
+}
+
 void Player::Initialize(Model* model, Camera* camera,const Vector3& position)
 {
 	/// インゲームの初期化処理///
@@ -489,7 +523,7 @@ void Player::Update()
 
 	/// ＝＝＝＝＝⑧行列計算＝＝＝＝＝///
 	// 行列更新
-	worldTransform_.TransferMatrix();
+	//worldTransform_.TransferMatrix();
 
 	// アフィン変換行列の作成
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);

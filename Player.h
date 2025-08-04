@@ -1,5 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
+#include "MyMath.h"
 
 //
 enum class LRDirection
@@ -20,6 +21,7 @@ enum Corner
 };
 
 class MapChipField;
+class Enemy;
 
 /// <summary>
 /// 自キャラ
@@ -79,6 +81,15 @@ public:
 	//⑦旋回制御
 	void AnimateTurn();
 
+	//ワールド座標を取得
+	KamataEngine::Vector3 GetWorldPosition();
+
+	// AABBを取得
+	AABB GetAABB();
+
+	//衝突応答
+	void OnCollision(const Enemy* enemy);
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -130,6 +141,7 @@ private:
 	//キャラクターの当たり判定
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+	static inline const float kDepth = 0.8f;
 
 	// マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;

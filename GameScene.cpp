@@ -40,6 +40,31 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
+// 全ての当たり判定を行う(最後尾)
+void GameScene::CheckAllCollisions() {
+#pragma region 自キャラと敵キャラの当たり判定
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+	//自キャラの座標
+	aabb1 = player_->GetAABB();
+	//自キャラと敵弾全ての当たり判定
+	for (Enemy* enemy : enemies_)
+	{
+		//敵の座標
+		aabb2 = enemy->GetAABB();
+		//AABBの交差判定
+		if (IsCollision(aabb1, aabb2))
+		{
+			//自キャラの衝突時関数を呼び出す
+			player_->OnCollision(enemy);
+			//敵の衝突時関数を呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
+
+#pragma endregion
+}
+
 void GameScene::Initialize()
 {
 	///インゲームの初期化処理///
@@ -60,7 +85,6 @@ void GameScene::Initialize()
 
 	// 座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -70,9 +94,6 @@ void GameScene::Initialize()
 
 	//マップチップデータのセット
 	player_->SetMapChipField(mapChipField_);
-
-	//追従カメラの生成
-	cameraController_ = new CameraController();
 
 	//天球の生成
 	skydome_ = new Skydome();
@@ -87,8 +108,14 @@ void GameScene::Initialize()
 	skydome_->Initialize(modelSkydome_, &camera_);
 
 	//敵の生成と初期化
-	enemy_ = new Enemy();
-	enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
+	const int enemyNum = 3;
+	for (int32_t i = 0; i < enemyNum; i++)
+	{
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(30, 18 - i);
+		newEnemy->Initialize(modelEnemy_, &camera_, enemyPosition);
+		enemies_.push_back(newEnemy);
+	}
 
 
 	///===カメラコントローラの初期化===
@@ -120,7 +147,10 @@ void GameScene::Update()
 	player_->Update();
 
 	// 敵の更新
-	enemy_->Update();
+	for (Enemy* enemy : enemies_)
+	{
+		enemy->Update();
+	}
 
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -165,8 +195,9 @@ void GameScene::Update()
 		camera_.TransferMatrix();
 	}
 
-	//追従カメラ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	//追従カメラ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝	
 
+	CheckAllCollisions();
 }
 
 void GameScene::Draw()
@@ -197,7 +228,10 @@ void GameScene::Draw()
 	skydome_->Draw();
 
 	//敵の描画
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_)
+	{
+		enemy->Draw();
+	}
 
 	///＝＝＝＝＝＝＝＝＝＝＝＝＝＝///
 
@@ -213,8 +247,12 @@ GameScene::~GameScene()
 	delete modelBlock_;
 	delete debugCamera_;
 	delete modelSkydome_;
+	delete skydome_;
 	delete mapChipField_;
-	delete enemy_;
+	for (Enemy* enemy : enemies_)
+	{
+		delete enemy;
+	}
 	delete modelEnemy_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_)
