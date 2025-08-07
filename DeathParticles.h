@@ -16,13 +16,11 @@ public:
 	void Draw();
 
 private:
-	// ワールド変換データ
-	KamataEngine::WorldTransform worldTransform_;
 
-	// モデル
+	//モデル
 	KamataEngine::Model* model_ = nullptr;
 
-	// カメラ
+	//カメラ
 	KamataEngine::Camera* camera_ = nullptr;
 
 	//パーティクルの個数
@@ -32,7 +30,7 @@ private:
 	//存続時間(消滅までの時間)<秒>
 	static inline const float kDuration = 0.5f;
 	//移動の速さ
-	static inline const float kSpeed = 0.8f;
+	static inline const float kSpeed = 0.1f;
 	//分割した1個分の角度
 	static inline const float kAngleUint = 2.0f * std::numbers::pi_v<float> / kNumParticles;
 

@@ -20,8 +20,6 @@ void DeathParticles::Initialize(Model* model, Camera* camera, const Vector3& pos
 	// position_ = position;
 
 	// ワールド変換の初期化
-	worldTransform_.Initialize();
-	worldTransform_.translation_ = position;
 	for (WorldTransform& worldTransform : worldTransforms_)
 	{
 		worldTransform.Initialize();
@@ -57,7 +55,7 @@ void DeathParticles::Update()
 	for (auto& worldTransform : worldTransforms_)
 	{
 		// アフィン変換行列の作成
-		worldTransform.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+		worldTransform.matWorld_ = MakeAffineMatrix(worldTransform.scale_, worldTransform.rotation_, worldTransform.translation_);
 		// 行列を定数バッファに転送
 		worldTransform.TransferMatrix();
 	}
