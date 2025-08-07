@@ -44,7 +44,7 @@ private:
 	float turnFirstRotationY_ = 90.0f;
 
 	//歩行の速さ
-	static inline const float kWalkSpeed = 0.1f;
+	static inline const float kWalkSpeed = 0.01f;
 
 	//速度
 	KamataEngine::Vector3 velocity_ = {};

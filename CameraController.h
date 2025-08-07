@@ -56,4 +56,3 @@ private:
 	//速度掛け率
 	static inline const float kVelocityBias = 3;
 };
-

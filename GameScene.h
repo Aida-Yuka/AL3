@@ -5,6 +5,7 @@
 #include "Skydome.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "DeathParticles.h"
 #include <vector>
 
 class GameScene
@@ -17,7 +18,9 @@ public:
 	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::Model* modelBlock_ = nullptr;
 	KamataEngine::Model* modelSkydome_ = nullptr;
+	KamataEngine::Model* modelDeathParticle_ = nullptr;
 	KamataEngine::Model* modelEnemy_ = nullptr;
+
 
 	//デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
@@ -48,6 +51,9 @@ public:
 
 	//敵
 	std::list<Enemy*> enemies_;
+
+	//デスパーティクル
+	DeathParticles* deathParticles_ = nullptr;
 
 	//表示ブロックの生成
 	void GenerateBlocks();

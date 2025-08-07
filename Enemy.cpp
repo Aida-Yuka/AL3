@@ -11,7 +11,7 @@ float ToRadian(float degree) { return degree * (3.14159265f / 180.0f); }
 
 Vector3 Enemy::GetWorldPosition() {
 	// ワールド座標を入れる変数
-	Vector3 worldPos;
+	Vector3 worldPos{};
 
 	// ワールド行列の平行移動成分を取得(ワールド座標)
 	worldPos.x = worldTransform_.matWorld_.m[3][0];

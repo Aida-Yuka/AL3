@@ -41,7 +41,8 @@ void GameScene::GenerateBlocks() {
 }
 
 // 全ての当たり判定を行う(最後尾)
-void GameScene::CheckAllCollisions() {
+void GameScene::CheckAllCollisions()
+{
 #pragma region 自キャラと敵キャラの当たり判定
 	// 判定対象1と2の座標
 	AABB aabb1, aabb2;
@@ -77,6 +78,7 @@ void GameScene::Initialize()
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
+	modelDeathParticle_-> Model::CreateFromOBJ("deathParticle", true);
 
 	//マップチップフィールドの設定
 	mapChipField_ = new MapChipField;
@@ -117,6 +119,10 @@ void GameScene::Initialize()
 		enemies_.push_back(newEnemy);
 	}
 
+	//
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(modelDeathParticle_, &camera_, playerPosition);
+	//deathParticles_->Initialize(model_, &camera_, playerPosition);
 
 	///===カメラコントローラの初期化===
 	//生成
@@ -197,6 +203,11 @@ void GameScene::Update()
 
 	//追従カメラ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝	
 
+	if (deathParticles_)
+	{
+		deathParticles_->Update();
+	}
+
 	CheckAllCollisions();
 }
 
@@ -233,6 +244,11 @@ void GameScene::Draw()
 		enemy->Draw();
 	}
 
+	if (deathParticles_)
+	{
+		deathParticles_->Draw();
+	}
+
 	///＝＝＝＝＝＝＝＝＝＝＝＝＝＝///
 
 	// 3Dモデル描画後処理
@@ -254,6 +270,7 @@ GameScene::~GameScene()
 		delete enemy;
 	}
 	delete modelEnemy_;
+	delete modelDeathParticle_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_)
 	{
