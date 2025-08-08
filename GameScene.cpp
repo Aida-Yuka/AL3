@@ -119,9 +119,9 @@ void GameScene::Initialize()
 		enemies_.push_back(newEnemy);
 	}
 
-	//
+	//デスパーティクルの初期化
 	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(modelDeathParticle_,&camera_,playerPosition);
+	deathParticles_->Initialize(modelDeathParticle_, &camera_, playerPosition);
 
 	///===カメラコントローラの初期化===
 	//生成

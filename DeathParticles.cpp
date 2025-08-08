@@ -20,7 +20,8 @@ void DeathParticles::Initialize(Model* model, Camera* camera, const Vector3& pos
 	// position_ = position;
 
 	// ワールド変換の初期化
-	for (WorldTransform& worldTransform : worldTransforms_) {
+	for (WorldTransform& worldTransform : worldTransforms_)
+	{
 		worldTransform.Initialize();
 		worldTransform.translation_ = position;
 	}

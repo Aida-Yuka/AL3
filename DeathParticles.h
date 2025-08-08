@@ -17,10 +17,10 @@ public:
 
 private:
 
-	// モデル
+	//モデル
 	KamataEngine::Model* model_ = nullptr;
 
-	// カメラ
+	//カメラ
 	KamataEngine::Camera* camera_ = nullptr;
 
 	//パーティクルの個数
