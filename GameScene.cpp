@@ -78,7 +78,7 @@ void GameScene::Initialize()
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
-	modelDeathParticle_-> Model::CreateFromOBJ("deathParticle", true);
+	modelDeathParticle_ = Model::CreateFromOBJ("deathParticle", true);
 
 	//マップチップフィールドの設定
 	mapChipField_ = new MapChipField;
@@ -86,7 +86,7 @@ void GameScene::Initialize()
 	GenerateBlocks();
 
 	// 座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -121,8 +121,7 @@ void GameScene::Initialize()
 
 	//
 	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(modelDeathParticle_, &camera_, playerPosition);
-	//deathParticles_->Initialize(model_, &camera_, playerPosition);
+	deathParticles_->Initialize(modelDeathParticle_,&camera_,playerPosition);
 
 	///===カメラコントローラの初期化===
 	//生成
