@@ -465,9 +465,8 @@ AABB Player::GetAABB()
 void Player::OnCollision(const Enemy* enemy)
 {
 	(void)enemy;
-	//ジャンプ開始(仮処理)
-	//velocity_ += Vector3(5.0f);
-	velocity_.y = 1.0f;
+	//死亡フラグを立てる
+	isDead_ = true;
 }
 
 void Player::Initialize(Model* model, Camera* camera,const Vector3& position)
@@ -507,15 +506,15 @@ void Player::Update()
 	// マップ衝突チェック
 	CheckMapCollision(collisionMapInfo);
 
-	/// ＝＝＝＝＝③判定結果を反映して移動させる＝＝＝＝＝///
+	///＝＝＝＝＝③判定結果を反映して移動させる＝＝＝＝＝///
 	CheckMapMove(collisionMapInfo);
 
-	/// ＝＝＝＝＝④天井に接触しているとき＝＝＝＝＝///
+	///＝＝＝＝＝④天井に接触しているとき＝＝＝＝＝///
 	CheckMapCeiling(collisionMapInfo);
 
-	/// ＝＝＝＝＝⑤壁に接触しているとき＝＝＝＝＝///
+	///＝＝＝＝＝⑤壁に接触しているとき＝＝＝＝＝///
 
-	/// ＝＝＝＝＝⑥接地判定の切り替え＝＝＝＝＝///
+	///＝＝＝＝＝⑥接地判定の切り替え＝＝＝＝＝///
 	CheckMapLanding(collisionMapInfo);
 
 	/// ＝＝＝＝＝⑦旋回制御＝＝＝＝＝///

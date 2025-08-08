@@ -90,6 +90,9 @@ public:
 	//衝突応答
 	void OnCollision(const Enemy* enemy);
 
+	// 死亡フラグのgetter
+	bool IsDead() const { return isDead_; }
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -153,5 +156,8 @@ private:
 	static inline const float kAttenuationLanding = 0.8f;
 
 	//微小な数値
-	static inline const float kGroundSearchHeight = 0.5;
+	static inline const float kGroundSearchHeight = 0.5f;
+
+	//死亡フラグ
+	bool isDead_ = false;
 };

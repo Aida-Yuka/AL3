@@ -40,7 +40,7 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
-// 全ての当たり判定を行う(最後尾)
+//全ての当たり判定を行う(最後尾)
 void GameScene::CheckAllCollisions()
 {
 #pragma region 自キャラと敵キャラの当たり判定
@@ -66,9 +66,41 @@ void GameScene::CheckAllCollisions()
 #pragma endregion
 }
 
+//フェーズの切り替え
+void GameScene::ChangePhase()
+{
+	switch (phase_)
+	{
+	case Phase::kPlay:
+
+		//＝＝＝ゲームプレイフェーズの処理＝＝＝
+
+		if (player_->IsDead()) {
+			// 死亡演出フェーズに切り替え
+
+			// 自キャラの座標を取得
+			const Vector3& deathParticlePosition = player_->GetWorldPosition();
+
+			// 自キャラの座標にデスパーティクルを発生、初期化
+			deathParticles_ = new DeathParticles;
+			deathParticles_->Initialize(modelDeathParticle_, &camera_, deathParticlePosition);
+		}
+
+		break;
+	case Phase::kDeath:
+
+		//＝＝＝デス演出フェーズの処理＝＝＝
+
+		break;
+	}
+}
+
 void GameScene::Initialize()
 {
 	///インゲームの初期化処理///
+
+	// ゲームプレイフェーズからの開始
+	phase_ = Phase::kPlay;
 
 	// ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("uvChecker.png");
@@ -119,10 +151,6 @@ void GameScene::Initialize()
 		enemies_.push_back(newEnemy);
 	}
 
-	//デスパーティクルの初期化
-	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(modelDeathParticle_, &camera_, playerPosition);
-
 	///===カメラコントローラの初期化===
 	//生成
 	cameraController_ = new CameraController();
@@ -142,72 +170,105 @@ void GameScene::Update()
 {
 	/// インゲームの更新処理///
 
-	// ワールドトランスフォームの初期化
-	//worldTransform_.Initialize();
-	
-	// カメラコントローラーの更新
-	cameraController_->Update();
+	switch (phase_) {
+	case Phase::kPlay:
 
-	// 自キャラの更新
-	player_->Update();
+		// ＝＝＝ゲームプレイフェーズの処理＝＝＝
 
-	// 敵の更新
-	for (Enemy* enemy : enemies_)
-	{
-		enemy->Update();
-	}
+		// 自キャラの更新
+		player_->Update();
 
-	// ブロックの更新
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
 		}
-	}
 
+		// カメラの処理
 #ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_0))
-	{
-		isDebugCameraActive_ = !isDebugCameraActive_;
-	}
+		if (Input::GetInstance()->TriggerKey(DIK_0)) {
+			isDebugCameraActive_ = !isDebugCameraActive_;
+		}
 #endif
 
-	// カメラの処理
-	if (isDebugCameraActive_)
-	{
-		debugCamera_->Update();
+		if (isDebugCameraActive_) {
+			debugCamera_->Update();
 
-		camera_.matView = debugCamera_->GetCamera().matView;
-		camera_.matProjection = debugCamera_->GetCamera().matProjection;
+			camera_.matView = debugCamera_->GetCamera().matView;
+			camera_.matProjection = debugCamera_->GetCamera().matProjection;
+
+			// ビュープロジェクション行列の転送
+			camera_.TransferMatrix();
+
+		} else {
+			// ビュープロジェクション行列の更新
+			// camera_.UpdateMatrix();
+
+			camera_.matView = cameraController_->GetViewProjection().matView;
+			camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+
+			// ビュープロジェクション行列の転送
+			camera_.TransferMatrix();
+		}
+
+		// カメラコントローラーの更新
+		cameraController_->Update();
+
+		// ブロックの更新
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+		// 全ての当たり判定を行う
+		CheckAllCollisions();
+
+		//フェーズの切り替え処理
+		ChangePhase();
+
+		break;
+
+	case Phase::kDeath:
+
+		// ＝＝＝デス演出フェーズの処理＝＝＝
+
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
+		}
+
+			// デスパーティクルの更新
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
 
 		// ビュープロジェクション行列の転送
 		camera_.TransferMatrix();
 
-	} else
-	{
-		// ビュープロジェクション行列の更新
-		//camera_.UpdateMatrix();
-		
-		camera_.matView = cameraController_->GetViewProjection().matView;
-		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+		// ブロックの更新
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
 
-		//ビュープロジェクション行列の転送
-		camera_.TransferMatrix();
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+		break;
 	}
 
-	//追従カメラ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝	
-
-	if (deathParticles_)
-	{
-		deathParticles_->Update();
-	}
-
-	CheckAllCollisions();
+	// ワールドトランスフォームの初期化
+	//worldTransform_.Initialize();
 }
 
 void GameScene::Draw()
@@ -243,6 +304,7 @@ void GameScene::Draw()
 		enemy->Draw();
 	}
 
+	//デスパーティクルの描画
 	if (deathParticles_)
 	{
 		deathParticles_->Draw();

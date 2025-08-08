@@ -61,7 +61,21 @@ public:
 	//全ての当たり判定を行う
 	void CheckAllCollisions();
 
+	//フェーズの切り替え
+	void ChangePhase();
+
 private:
+
+	// ゲームのフェーズ(型)
+	enum class Phase
+	{
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+	};
+
+	// ゲームの現在フェーズ
+	Phase phase_;
+
 	// ワールドトランスフォーム
 	KamataEngine::WorldTransform worldTransform_;
 
