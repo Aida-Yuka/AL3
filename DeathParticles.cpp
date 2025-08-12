@@ -33,7 +33,7 @@ void DeathParticles::Initialize(Model* model, Camera* camera, const Vector3& pos
 
 void DeathParticles::Update() {
 	// 終了なら何もしない(先頭)
-	if (isFinished_) {
+	if (finished_) {
 		return;
 	}
 
@@ -66,7 +66,7 @@ void DeathParticles::Update() {
 	if (counter_ > kDuration) {
 		counter_ = kDuration;
 		// 終了扱いにする
-		isFinished_ = true;
+		finished_ = true;
 	}
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
@@ -77,7 +77,7 @@ void DeathParticles::Update() {
 
 void DeathParticles::Draw() {
 	// 終了なら何もしない(先頭)
-	if (isFinished_) {
+	if (finished_) {
 		return;
 	}
 

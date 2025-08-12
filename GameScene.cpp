@@ -264,6 +264,12 @@ void GameScene::Update()
 			}
 		}
 
+		//デスパーティクルが終了したらシーンを終了する
+		if (deathParticles_ && deathParticles_->IsFinished())
+		{
+			finished_ = true;
+		}
+
 		break;
 	}
 

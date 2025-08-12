@@ -15,6 +15,11 @@ public:
 
 	void Draw();
 
+	// 終了フラグ
+	bool finished_ = false;
+	// 終了フラグのgetter
+	bool IsFinished() const { return finished_; }
+
 private:
 
 	//モデル
@@ -34,8 +39,7 @@ private:
 	//分割した1個分の角度
 	static inline const float kAngleUint = 2.0f * std::numbers::pi_v<float> / kNumParticles;
 
-	//終了フラグ
-	bool isFinished_ = false;
+	
 	//経過時間カウント
 	float counter_ = 0.0f;
 
