@@ -91,6 +91,12 @@ void GameScene::ChangePhase()
 
 		//＝＝＝デス演出フェーズの処理＝＝＝
 
+		
+		// デスパーティクルが終了したらシーンを終了する
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_ = true;
+		}
+
 		break;
 	}
 }
@@ -263,14 +269,6 @@ void GameScene::Update()
 				worldTransformBlock->TransferMatrix();
 			}
 		}
-
-		//デスパーティクルが終了したらシーンを終了する
-		if (deathParticles_ && deathParticles_->IsFinished())
-		{
-			finished_ = true;
-		}
-
-		break;
 	}
 
 	// ワールドトランスフォームの初期化

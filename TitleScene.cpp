@@ -1,4 +1,5 @@
 #include "TitleScene.h"
+#include "MyMath.h"
 #include "CameraController.h"
 #include "MapChipField.h"
 
@@ -8,7 +9,7 @@ using namespace KamataEngine;
 void TitleScene::Initialize()
 {
 	//3Dモデルの生成
-	modelTitle_ = Model::CreateFromOBJ("player");
+	modelTitle_ = Model::CreateFromOBJ("titleFont");
 	modelPlayer_ = Model::CreateFromOBJ("player");
 	//カメラの初期化
 	camera_.Initialize();

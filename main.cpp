@@ -88,6 +88,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// InguiManagerインスタンスの取得
 	// ImGuiManager* imguiManager = ImGuiManager::GetInstance();
 
+	//最初のシーンの初期化
+	scene = Scene::kTitle;
+	titleScene = new TitleScene;
+	titleScene->Initialize();
+
 	// メインループ
 	while (true)
 	{
