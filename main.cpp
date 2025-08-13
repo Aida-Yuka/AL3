@@ -103,7 +103,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		}
 
 		// ゲームシーンの更新
-		titleScene->Update();
+		//titleScene->Update();
 
 		//シーン切り替え
 		ChangeScene();
@@ -115,7 +115,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		dxCommon->PreDraw();
 
 		// ゲームシーンの描画
-		titleScene->Draw();
+		//titleScene->Draw();
 
 		//現在シーンの描画
 		DrawScene();

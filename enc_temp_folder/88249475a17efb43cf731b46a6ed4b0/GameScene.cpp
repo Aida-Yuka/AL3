@@ -75,8 +75,7 @@ void GameScene::ChangePhase()
 
 		//＝＝＝ゲームプレイフェーズの処理＝＝＝
 
-		if (player_->IsDead())
-		{
+		if (player_->IsDead()) {
 			// 死亡演出フェーズに切り替え
 			phase_ = Phase::kDeath;
 
@@ -93,9 +92,9 @@ void GameScene::ChangePhase()
 
 		//＝＝＝デス演出フェーズの処理＝＝＝
 
+		
 		// デスパーティクルが終了したらシーンを終了する
-		if (deathParticles_ && deathParticles_->IsFinished())
-		{
+		if (deathParticles_ && deathParticles_->IsFinished()) {
 			finished_ = true;
 		}
 
@@ -114,7 +113,7 @@ void GameScene::Initialize()
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 
 	// 3Dモデルの生成
-	model_ = Model::CreateFromOBJ("player",true);
+	model_ = Model::CreateFromOBJ("player");
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
