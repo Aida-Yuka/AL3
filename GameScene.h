@@ -8,6 +8,7 @@
 #include "DeathParticles.h"
 #include <vector>
 #include "TitleScene.h"
+#include "Fade.h"
 
 class GameScene
 {
@@ -67,16 +68,18 @@ public:
 
 	//終了フラグのgetter
 	bool IsFinished() const { return finished_; }
+
 	//終了フラグ
 	bool finished_ = false;
 
 private:
 
 	// ゲームのフェーズ(型)
-	enum class Phase
-	{
-		kPlay,  // ゲームプレイ
-		kDeath, // デス演出
+	enum class Phase {
+		kFadeIn,  // フェードイン
+		kPlay,    // ゲームプレイ
+		kDeath,   // デス演出
+		kFadeOut, // フェードアウト
 	};
 
 	// ゲームの現在フェーズ
@@ -93,4 +96,7 @@ private:
 
 	//デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
+
+	// フェード
+	Fade* fade_ = nullptr;
 };
