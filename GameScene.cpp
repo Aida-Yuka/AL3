@@ -99,8 +99,6 @@ void GameScene::ChangePhase()
 			//フェードアウト開始
 			phase_ = Phase::kFadeOut;
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
-
-			finished_ = true;
 		}
 
 		break;
