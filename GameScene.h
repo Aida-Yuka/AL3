@@ -23,6 +23,7 @@ public:
 	KamataEngine::Model* modelDeathParticle_ = nullptr;
 	KamataEngine::Model* modelEnemy_ = nullptr;
 	KamataEngine::Model* modelMenu_ = nullptr;
+	KamataEngine::Model* modelMenu2_ = nullptr;
 
 	//デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;

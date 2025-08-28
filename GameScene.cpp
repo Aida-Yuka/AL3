@@ -86,13 +86,6 @@ void GameScene::ChangePhase()
 		{
 			// 死亡演出フェーズに切り替え
 			phase_ = Phase::kDeath;
-
-			// 自キャラの座標を取得
-			const Vector3& deathParticlePosition = player_->GetWorldPosition();
-
-			// 自キャラの座標にデスパーティクルを発生、初期化
-			deathParticles_ = new DeathParticles;
-			deathParticles_->Initialize(modelDeathParticle_, &camera_, deathParticlePosition);
 		}
 
 		break;
@@ -162,6 +155,7 @@ void GameScene::Initialize()
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 	modelDeathParticle_ = Model::CreateFromOBJ("deathParticle", true);
 	modelMenu_ = Model::CreateFromOBJ("pauseMenu", true);
+	modelMenu2_ = Model::CreateFromOBJ("menu", true);
 
 	//マップチップフィールドの設定
 	mapChipField_ = new MapChipField;
@@ -220,11 +214,30 @@ void GameScene::Initialize()
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
+
+	// ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
 }
 
 void GameScene::Update()
 {
 	/// インゲームの更新処理///
+
+			//
+	Vector3 PausePosition = player_->GetWorldPosition();
+	PausePosition.y = 8.0f;
+	PausePosition.z = -2.0f;
+	worldTransform_.translation_ = PausePosition;
+	worldTransform_.rotation_.x = 3.14f / 2.0f;
+	worldTransform_.rotation_.y = 3.14f;
+
+	// アフィン変換行列の作成
+	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
+	// 行列を定数バッファに転送
+	worldTransform_.TransferMatrix();
+
+
 
 	// フェード
 	fade_->Update();
@@ -236,6 +249,19 @@ void GameScene::Update()
 	case Phase::kPlay:
 
 		// ＝＝＝ゲームプレイフェーズの処理＝＝＝
+
+		Vector3 PausePosition = player_->GetWorldPosition();
+		PausePosition.y = 8.0f;
+		PausePosition.z = -2.0f;
+		worldTransform_.translation_ = PausePosition;
+		worldTransform_.rotation_.x = 3.14f / 2.0f;
+		worldTransform_.rotation_.y = 3.14f;
+
+		// アフィン変換行列の作成
+		worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
+		// 行列を定数バッファに転送
+		worldTransform_.TransferMatrix();
 
 		// 全ての当たり判定を行う
 		CheckAllCollisions();
@@ -273,6 +299,20 @@ void GameScene::Update()
 		}
 		break;
 	case Phase::kPauseMenu:
+
+		//
+		Vector3 PausePosition = player_->GetWorldPosition();
+		PausePosition.y = 8.0f;
+		PausePosition.z = -2.0f;
+		worldTransform_.translation_ = PausePosition;
+		worldTransform_.rotation_.x = 3.14f / 2.0f;
+		worldTransform_.rotation_.y = 3.14f;
+
+		// アフィン変換行列の作成
+		worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
+		// 行列を定数バッファに転送
+		worldTransform_.TransferMatrix();
 
 		// ビュープロジェクション行列の転送
 		camera_.TransferMatrix();
@@ -352,9 +392,6 @@ void GameScene::Update()
 			worldTransformBlock->TransferMatrix();
 		}
 	}
-
-	// ワールドトランスフォームの初期化
-	//worldTransform_.Initialize();
 }
 
 void GameScene::Draw()
@@ -390,6 +427,12 @@ void GameScene::Draw()
 		enemy->Draw();
 	}
 
+	if (phase_ == Phase::kPlay)
+	{
+		// 3Dモデルを描画
+		modelMenu2_->Draw(worldTransform_, camera_);
+	}
+
 	if (phase_ == Phase::kPauseMenu)
 	{
 		// 3Dモデルを描画
@@ -397,12 +440,12 @@ void GameScene::Draw()
 	}
 
 	//デスパーティクルの描画
-	if (phase_ == Phase::kDeath)
-	{
-		if (deathParticles_) {
-			deathParticles_->Draw();
-		}
+	/*if (phase_ == Phase::kDeath)
+	{*/
+	if (deathParticles_) {
+		deathParticles_->Draw();
 	}
+	//}
 
 	// フェード
 	fade_->Draw();
