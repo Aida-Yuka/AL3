@@ -105,6 +105,8 @@ void GameScene::ChangePhase()
 
 		//＝＝＝デス演出フェーズの処理＝＝＝
 
+		case Phase::kDeath:
+
 		// デス演出がまだ始まっていなければ開始する
 		if (deathParticles_ && !deathParticles_->IsActive()) {
 			deathParticles_->Start(); // ←新しく開始する処理を用意する
@@ -115,6 +117,9 @@ void GameScene::ChangePhase()
 			phase_ = Phase::kFadeOut;
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
 		}
+
+		break;
+
 
 		// デスパーティクルが終了したらシーンを終了する
 		//if (deathParticles_ && deathParticles_->IsFinished())

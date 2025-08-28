@@ -487,6 +487,9 @@ void Player::Initialize(Model* model, Camera* camera,const Vector3& position)
 		
 	// 初期回転
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
+
+	isDead_ = false;
+
 }
 
 void Player::Update()
