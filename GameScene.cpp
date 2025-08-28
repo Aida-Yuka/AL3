@@ -75,6 +75,13 @@ void GameScene::ChangePhase()
 
 		//＝＝＝ゲームプレイフェーズの処理＝＝＝
 
+		// Mキーを押すと
+		if (Input::GetInstance()->PushKey(DIK_M))
+		{
+			//メニュー画面に切り替え
+			phase_ = Phase::kPauseMenu;
+		}
+
 		if (player_->IsDead())
 		{
 			// 死亡演出フェーズに切り替え
@@ -99,6 +106,25 @@ void GameScene::ChangePhase()
 			//フェードアウト開始
 			phase_ = Phase::kFadeOut;
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
+		}
+
+		break;
+
+	case Phase::kPauseMenu:
+
+		//1キーを押すと
+		if (Input::GetInstance()->PushKey(DIK_1))
+		{
+			// フェードアウト開始
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+		}
+
+		//2を押すと
+		if (Input::GetInstance()->PushKey(DIK_2))
+		{
+			//ゲームに戻る
+			phase_ = Phase::kPlay;
 		}
 
 		break;
@@ -135,6 +161,7 @@ void GameScene::Initialize()
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 	modelDeathParticle_ = Model::CreateFromOBJ("deathParticle", true);
+	modelMenu_ = Model::CreateFromOBJ("pauseMenu", true);
 
 	//マップチップフィールドの設定
 	mapChipField_ = new MapChipField;
@@ -244,15 +271,33 @@ void GameScene::Update()
 				worldTransformBlock->TransferMatrix();
 			}
 		}
-	
-		case Phase::kFadeIn:
-			//フェード
-		    fade_->Update();
-		    break;
-	    case Phase::kFadeOut:
-			//フェード
-		    fade_->Update();
-		    break;
+		break;
+	case Phase::kPauseMenu:
+
+		// ビュープロジェクション行列の転送
+		camera_.TransferMatrix();
+
+		// ブロックの更新
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+		break;	
+	case Phase::kFadeIn:
+		// フェード
+		fade_->Update();
+		break;
+	 case Phase::kFadeOut:
+		// フェード
+		fade_->Update();
+		break;
 	}
 
 	///＝＝＝共通の処理＝＝＝
@@ -345,10 +390,18 @@ void GameScene::Draw()
 		enemy->Draw();
 	}
 
-	//デスパーティクルの描画
-	if (deathParticles_)
+	if (phase_ == Phase::kPauseMenu)
 	{
-		deathParticles_->Draw();
+		// 3Dモデルを描画
+		modelMenu_->Draw(worldTransform_, camera_);
+	}
+
+	//デスパーティクルの描画
+	if (phase_ == Phase::kDeath)
+	{
+		if (deathParticles_) {
+			deathParticles_->Draw();
+		}
 	}
 
 	// フェード

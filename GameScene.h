@@ -22,7 +22,7 @@ public:
 	KamataEngine::Model* modelSkydome_ = nullptr;
 	KamataEngine::Model* modelDeathParticle_ = nullptr;
 	KamataEngine::Model* modelEnemy_ = nullptr;
-
+	KamataEngine::Model* modelMenu_ = nullptr;
 
 	//デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
@@ -76,10 +76,11 @@ private:
 
 	// ゲームのフェーズ(型)
 	enum class Phase {
-		kFadeIn,  // フェードイン
-		kPlay,    // ゲームプレイ
-		kDeath,   // デス演出
-		kFadeOut, // フェードアウト
+		kFadeIn,    // フェードイン
+		kPlay,      // ゲームプレイ
+		kDeath,     // デス演出
+		kPauseMenu, // ポーズメニュー
+		kFadeOut,   // フェードアウト
 	};
 
 	// ゲームの現在フェーズ
