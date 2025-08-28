@@ -94,35 +94,36 @@ void GameScene::ChangePhase()
 			phase_ = Phase::kPauseMenu;
 		}
 
-		if (player_->IsDead())
-		{
+		if (player_->IsDead()) {
 			// 死亡演出フェーズに切り替え
 			phase_ = Phase::kDeath;
+
+			// 自キャラの座標を取得
+			const Vector3& deathParticlePosition = player_->GetWorldPosition();
+
+			// 自キャラの座標にデスパーティクルを発生、初期化
+			deathParticles_ = new DeathParticles;
+			deathParticles_->Initialize(modelDeathParticle_, &camera_, deathParticlePosition);
 		}
+
+		//if (player_->IsDead())
+		//{
+		//	// 死亡演出フェーズに切り替え
+		//	phase_ = Phase::kDeath;
+		//}
 
 		break;
 	case Phase::kDeath:
 
 		//＝＝＝デス演出フェーズの処理＝＝＝
 
-		// デス演出がまだ始まっていなければ開始する
-		if (deathParticles_ && !deathParticles_->IsActive()) {
-			deathParticles_->Start(); // ←新しく開始する処理を用意する
-		}
-
-		// デスパーティクルが終了したらフェードアウト
-		if (deathParticles_ && deathParticles_->IsFinished()) {
+		// デスパーティクルが終了したらシーンを終了する
+		if (deathParticles_ && deathParticles_->IsFinished())
+		{
+			//フェードアウト開始
 			phase_ = Phase::kFadeOut;
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
 		}
-
-		// デスパーティクルが終了したらシーンを終了する
-		//if (deathParticles_ && deathParticles_->IsFinished())
-		//{
-		//	//フェードアウト開始
-		//	phase_ = Phase::kFadeOut;
-		//	fade_->Start(Fade::Status::FadeOut, 1.0f);
-		//}
 
 		break;
 
